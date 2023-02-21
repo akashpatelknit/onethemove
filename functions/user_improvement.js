@@ -20,8 +20,9 @@ const calculation = function (user) {
     const user_data = [];
       var user_code="";
     for (let j = 0; j < user.length; j++) {
-     user_code=user[j].code;
+    
       if (unique_user_name[i] === user[j].name) {
+         user_code=user[j].code;
         user_data.push({
           name: user[j].name,
           
