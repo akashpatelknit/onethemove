@@ -1,3 +1,5 @@
+const { use } = require("../controller/controller");
+
 const calculation = function (user) {
   customsort = (a, b) => {
     const monthA = a.assessmentMonth.month;
@@ -18,19 +20,22 @@ const calculation = function (user) {
     const user_data = [];
 
     for (let j = 0; j < user.length; j++) {
+    
       if (unique_user_name[i] === user[j].name) {
         user_data.push({
           name: user[j].name,
+          
           assessmentMonth: user[j].assessmentMonth,
           performance: user[j].performance,
           scorePerCategory: user[j].scorePerCategory
         });
       }
     }
-
+    
     unique_user_data.push({
       name: unique_user_name[i],
-      all_month_data: user_data,
+      code:user[i].code,
+      all_month_data: user_data
     });
   }
 
@@ -61,6 +66,7 @@ const calculation = function (user) {
     }
     user_improvement_latestmonth.push({
       "name": item.all_month_data[0].name,
+       code:unique_user_data[i].code,
       "assessmentMonth": {
         "month": item.all_month_data[0].assessmentMonth.month,
         "year": item.all_month_data[0].assessmentMonth.year
