@@ -18,9 +18,9 @@ const calculation = function (user) {
   const unique_user_data = [];
   for (let i = 0; i < unique_user_name.length; i++) {
     const user_data = [];
-
+      var user_code="";
     for (let j = 0; j < user.length; j++) {
-    
+     user_code=user[j].code;
       if (unique_user_name[i] === user[j].name) {
         user_data.push({
           name: user[j].name,
@@ -34,7 +34,7 @@ const calculation = function (user) {
     
     unique_user_data.push({
       name: unique_user_name[i],
-      code:user[i].code,
+      code:user_code,
       all_month_data: user_data
     });
   }
