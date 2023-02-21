@@ -1,4 +1,4 @@
- const SHREDASSESSMENTMOVEMENTS = {
+const SHREDASSESSMENTMOVEMENTS = {
     push_ups: "Push Ups",
     strict_press: "Strict Press",
     plank: "Plank",
@@ -109,9 +109,8 @@ const recommendation = [
     },
 ]
 
-
 // finding recommendation for weakest category
-const recommended_movement = function (weakest_score_category) {
+const recommended_movements = function (weakest_score_category) {
     var arr = []
     recommendation.map((item) => {
         if (weakest_score_category == item.category) {
@@ -123,42 +122,55 @@ const recommended_movement = function (weakest_score_category) {
 
 const recommendation_fxn = function (user_improvement_latestmonth) {
     const recommendation_pre_movement = [];
-   
+
     user_improvement_latestmonth.map((item) => {
         var score = Infinity, mov;
         for (let i = 0; i < item.scorePerCategory.length; i++) {
             if (item.scorePerCategory[i].score < score) {
-            score=item.scorePerCategory[i].score
-            
+                score = item.scorePerCategory[i].score
+
                 mov = item.scorePerCategory[i].category
-                
+
             }
-        } 
+        }
         const arr1 = [];
         item.improvement.map((item1) => {
 
             if (item1.improvement < 0) {
                 arr1.push({
                     movement: item1.movement,
-                    improvement: item1.improvement
+                    info: {
+                        reason: "decline_in_performance",
+                        improvement: item1.improvement
+
+                    }
                 })
             }
         })
+        const a = recommended_movements(mov);
+        a.map((x) => {
+            arr1.push({
+                movement: x,
+                info: {
+                    reason: "weakest_category"
+                }
 
-        arr1.push({
-        weakest_category:recommended_movement(mov)
-        })  
-           
+            })
+        })
+
+
         if (arr1.length >= 1) {
             const rec = [];
             recommendation_pre_movement.push({
                 name: item.name,
+                code: item.code,
                 assessmentMonth: item.assessmentMonth,
                 Gap: item.Gap,
                 improvement: arr1,
             });
         }
     })
+    console.log(recommendation_pre_movement)
     return recommendation_pre_movement
 }
 module.exports = recommendation_fxn
