@@ -19,7 +19,7 @@ const ASSESSMENTCATEGORIES = {
     core: "Core",
     endurance: "Endurance"
 }
-const recommendation = [
+const movements = [
     {
         movement: SHREDASSESSMENTMOVEMENTS.push_ups,
         category: ASSESSMENTCATEGORIES.push,
@@ -110,9 +110,9 @@ const recommendation = [
 ]
 
 // finding recommendation for weakest category
-const recommended_movements = function (weakest_score_category) {
+const getRecommendationBasedOnWeakestCategory = function (weakest_score_category) {
     var arr = []
-    recommendation.map((item) => {
+    movements.map((item) => {
         if (weakest_score_category == item.category) {
             arr.push(item.movement);
         }
@@ -120,24 +120,25 @@ const recommended_movements = function (weakest_score_category) {
     return arr;
 }
 
-const recommendation_fxn = function (user_improvement_latestmonth) {
-    const recommendation_pre_movement = [];
+const getRecommendation = function (allUserData) {
+    const recommendationAllUsers = [];
 
-    user_improvement_latestmonth.map((item) => {
-        var score = Infinity, mov;
-        for (let i = 0; i < item.scorePerCategory.length; i++) {
-            if (item.scorePerCategory[i].score < score) {
-                score = item.scorePerCategory[i].score
+    allUserData.map((userImprovementData) => {
 
-                mov = item.scorePerCategory[i].category
-
+        // 1. findWeakestCategory
+        var score = Infinity, weakestCategory;
+        for (let i = 0; i < userImprovementData.scorePerCategory.length; i++) {
+            if (userImprovementData.scorePerCategory[i].score < score) {
+                score = userImprovementData.scorePerCategory[i].score
+                weakestCategory = userImprovementData.scorePerCategory[i].category
             }
         }
-        const arr1 = [];
-        item.improvement.map((item1) => {
+
+        const recommendation = []; // 2. filter
+        userImprovementData.improvement.map((item1) => {
 
             if (item1.improvement < 0) {
-                arr1.push({
+                recommendation.push({
                     movement: item1.movement,
                     info: {
                         reason: "decline_in_performance",
@@ -147,9 +148,10 @@ const recommendation_fxn = function (user_improvement_latestmonth) {
                 })
             }
         })
-        const a = recommended_movements(mov);
-        a.map((x) => {
-            arr1.push({
+
+        const weakestCategoryRecommendedMovements = getRecommendationBasedOnWeakestCategory(weakestCategory);
+        weakestCategoryRecommendedMovements.map((x) => {
+            recommendation.push({
                 movement: x,
                 info: {
                     reason: "weakest_category"
@@ -159,18 +161,18 @@ const recommendation_fxn = function (user_improvement_latestmonth) {
         })
 
 
-        if (arr1.length >= 1) {
-            const rec = [];
-            recommendation_pre_movement.push({
-                name: item.name,
-                code: item.code,
-                assessmentMonth: item.assessmentMonth,
-                Gap: item.Gap,
-                improvement: arr1,
-            });
-        }
+        recommendationAllUsers.push({
+            name: userImprovementData.name,
+            code: userImprovementData.code,
+            assessmentMonth: userImprovementData.assessmentMonth,
+            Gap: userImprovementData.Gap,
+            improvement: recommendation,
+        });
+
     })
-    console.log(recommendation_pre_movement)
-    return recommendation_pre_movement
+    console.log(recommendationAllUsers)
+    return recommendationAllUsers
 }
-module.exports = recommendation_fxn
+module.exports = {
+    getRecommendation
+}
