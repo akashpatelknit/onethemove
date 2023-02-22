@@ -1,85 +1,85 @@
-const { use } = require("../controller/controller");
 
-const calculation = function (user) {
-  customsort = (a, b) => {
-    const monthA = a.assessmentMonth.month;
-    const monthB = b.assessmentMonth.month;
-    const yearA = a.assessmentMonth.year;
-    const yearB = b.assessmentMonth.year;
-    if (yearA < yearB) return 1;
-    else if (yearA > yearB) return -1;
-    if (monthA < monthB) return 1;
-    else if (monthA > monthB) return -1;
-    return 0;
-  };
-  user.sort(customsort);
-  const unique_user_name = Array.from(new Set(user.map((item) => item.name)));
+const customsort = (a, b) => {
+  const monthA = a.assessmentMonth.month;
+  const monthB = b.assessmentMonth.month;
+  const yearA = a.assessmentMonth.year;
+  const yearB = b.assessmentMonth.year;
+  if (yearA < yearB) return 1;
+  else if (yearA > yearB) return -1;
+  if (monthA < monthB) return 1;
+  else if (monthA > monthB) return -1;
+  return 0;
+};
 
-  const unique_user_data = [];
-  for (let i = 0; i < unique_user_name.length; i++) {
-    const user_data = [];
-      var user_code="";
-    for (let j = 0; j < user.length; j++) {
-    
-      if (unique_user_name[i] === user[j].name) {
-         user_code=user[j].code;
-        user_data.push({
-          name: user[j].name,
-          
-          assessmentMonth: user[j].assessmentMonth,
-          performance: user[j].performance,
-          scorePerCategory: user[j].scorePerCategory
-        });
-      }
-    }
-    
-    unique_user_data.push({
-      name: unique_user_name[i],
-      code:user_code,
-      all_month_data: user_data
-    });
+const getGap = (current_month_data, previous_month_data) => {
+
+  console.log(current_month_data, previous_month_data);
+  const current_month = current_month_data.month;
+  const previous_month = previous_month_data.month;
+  const current_year = current_month_data.year;
+  const previous_year = previous_month_data.year;
+
+  const year_diff = current_year - previous_year;
+
+  var gap = current_month - previous_month;
+  if (year_diff >= 1) {
+    gap = 12 - previous_month + current_month + 12 * (year_diff - 1);
   }
 
-  const user_improvement_latestmonth = [];
-  for (let i = 0; i < unique_user_data.length; i++) {
-    const item = unique_user_data[i];
-  
-    if (item.all_month_data.length <= 1) continue;
-    const current_month = item.all_month_data[0].assessmentMonth.month;
-    const previous_month = item.all_month_data[1].assessmentMonth.month;
-    const current_year = item.all_month_data[0].assessmentMonth.year;
-    const previous_year = item.all_month_data[1].assessmentMonth.year;
-    const year_diff = current_year - previous_year;
-    var diff = current_month - previous_month;
-    if (year_diff >= 1) {
-
-      diff = 12 - previous_month + current_month + 12 * (year_diff - 1);
-    }
-    const user_each_months_performance = [];
-    let minlen = Math.min(item.all_month_data[0].performance.length, item.all_month_data[1].performance.length)
-    for (let k = 0; k < minlen; k++) {
-      const net_user_performance = (item.all_month_data[0].performance[k].performance - item.all_month_data[1].performance[k].performance);
-      user_each_months_performance.push({
-        "movement": item.all_month_data[0].performance[k].movement,
-        "improvement": net_user_performance
-      });
-
-    }
-    user_improvement_latestmonth.push({
-      "name": item.all_month_data[0].name,
-       code:unique_user_data[i].code,
-      "assessmentMonth": {
-        "month": item.all_month_data[0].assessmentMonth.month,
-        "year": item.all_month_data[0].assessmentMonth.year
-      },
-
-      "Gap": diff,
-      "improvement": user_each_months_performance,
-      scorePerCategory: item.all_month_data[0].scorePerCategory
-
-    });
-    
-  }
-   return user_improvement_latestmonth
+  return gap
 }
-module.exports = calculation
+
+const getImprovement = function (user_assessment_data) {
+  
+  user_assessment_data.sort(customsort);
+  const unique_user_name = Array.from(new Set(user_assessment_data.map((item) => item.name)));
+
+  
+  const improvementData = []
+  for (let i = 0; i < unique_user_name.length; i++) { // calc improvement data for user 1 by 1
+    const userName = unique_user_name[i]
+    console.log(userName);
+    const userDataAllMonths = user_assessment_data.filter(data => data.name == userName)
+
+    if (userDataAllMonths.length == 1) { // only 1 month's data present 
+      console.log("skipping ",userDataAllMonths[0].name);
+      continue;
+    }
+
+    
+    for (let i = 0; i < userDataAllMonths.length - 1; i++) { // calc improvement data for 1 user
+      const currentMonthData = userDataAllMonths[i];
+      const previousMonthData = userDataAllMonths[i+1];
+
+      // console.log(currentMonthData);
+
+      const monthylImprovement = []
+      currentMonthData.performance.map(p => {
+        const prev_month_performance = previousMonthData.performance.filter(prev_p => prev_p.movement == p.movement)[0]
+        const improvement = p.performance - prev_month_performance.performance
+        monthylImprovement.push({
+          movement: p.movement,
+          improvement: improvement
+        })
+      })
+
+      improvementData.push({
+        "name": userName,
+        code : currentMonthData.code,
+        "assessmentMonth": currentMonthData.assessmentMonth,
+        "Gap": getGap(currentMonthData.assessmentMonth, previousMonthData.assessmentMonth),
+        "improvement": monthylImprovement,
+        scorePerCategory: currentMonthData.scorePerCategory
+      });
+    }
+      
+  }
+
+  console.log(improvementData);
+  return improvementData
+
+}
+
+module.exports = {
+  getImprovement
+}
