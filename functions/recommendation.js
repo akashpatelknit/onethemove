@@ -108,7 +108,18 @@ const movements = [
         max: 35
     },
 ]
+// finding weakest category
+const getWeakestCategory=function(scorePerCategory){
+ let score = Infinity, weakestCategory;
+        for (let i = 0; i < scorePerCategory.length; i++) {
+            if (scorePerCategory[i].score < score) {
+                score = scorePerCategory[i].score
+                weakestCategory = scorePerCategory[i].category
+            }
+        }
+        return weakestCategory
 
+}
 // finding recommendation for weakest category
 const getRecommendationBasedOnWeakestCategory = function (weakest_score_category) {
     var arr = []
@@ -125,31 +136,21 @@ const getRecommendation = function (allUserData) {
 
     allUserData.map((userImprovementData) => {
 
-        // 1. findWeakestCategory
-        var score = Infinity, weakestCategory;
-        for (let i = 0; i < userImprovementData.scorePerCategory.length; i++) {
-            if (userImprovementData.scorePerCategory[i].score < score) {
-                score = userImprovementData.scorePerCategory[i].score
-                weakestCategory = userImprovementData.scorePerCategory[i].category
-            }
-        }
 
-        const recommendation = []; // 2. filter
-        userImprovementData.improvement.map((item1) => {
-
-            if (item1.improvement < 0) {
-                recommendation.push({
-                    movement: item1.movement,
+        const  recommendation=[]  // 2. filter
+       const userDataWithNegativeImprovement=userImprovementData.improvement.filter(negative_improvements=> negative_improvements.improvement<0)
+       userDataWithNegativeImprovement.map(user_improvement_at_each_movement=>{
+       recommendation.push({
+                    movement: user_improvement_at_each_movement.movement,
                     info: {
                         reason: "decline_in_performance",
-                        improvement: item1.improvement
+                        improvement: user_improvement_at_each_movement.improvement
 
                     }
                 })
-            }
-        })
-
-        const weakestCategoryRecommendedMovements = getRecommendationBasedOnWeakestCategory(weakestCategory);
+       
+       })
+        const weakestCategoryRecommendedMovements = getRecommendationBasedOnWeakestCategory(getWeakestCategory(userImprovementData.scorePerCategory));
         weakestCategoryRecommendedMovements.map((x) => {
             recommendation.push({
                 movement: x,
@@ -170,7 +171,7 @@ const getRecommendation = function (allUserData) {
         });
 
     })
-    console.log(recommendationAllUsers)
+    // console.log(recommendationAllUsers)
     return recommendationAllUsers
 }
 module.exports = {
