@@ -13,7 +13,7 @@ const customsort = (a, b) => {
 
 const getGap = (current_month_data, previous_month_data) => {
 
-  console.log(current_month_data, previous_month_data);
+  // console.log(current_month_data, previous_month_data);
   const current_month = current_month_data.month;
   const previous_month = previous_month_data.month;
   const current_year = current_month_data.year;
@@ -38,11 +38,13 @@ const getImprovement = function (user_assessment_data) {
   const improvementData = []
   for (let i = 0; i < unique_user_name.length; i++) { // calc improvement data for user 1 by 1
     const userName = unique_user_name[i]
-    console.log(userName);
+    // console.log(userName);
     const userDataAllMonths = user_assessment_data.filter(data => data.name == userName)
 
+
+  
     if (userDataAllMonths.length == 1) { // only 1 month's data present 
-      console.log("skipping ",userDataAllMonths[0].name);
+      // console.log("skipping ",userDataAllMonths[0].name);
       continue;
     }
 
@@ -75,7 +77,7 @@ const getImprovement = function (user_assessment_data) {
       
   }
 
-  console.log(improvementData);
+  // console.log(improvementData);
   return improvementData
 
 }
