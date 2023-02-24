@@ -10,16 +10,13 @@ router.post("/", async (req, res) => {
     const user_assessment_data = req.body;
     const user_improvement_allMonth = getImprovement(user_assessment_data);
     // filter latest month and pass to getRecommendation function
-    const user_recommendation_latestmonth = getRecommendation(user_improvement_allMonth);
+    const user_recommendation_latestmonth = await getRecommendation(user_improvement_allMonth);
+
+    res.json(user_recommendation_latestmonth);
 
 
 
-
-    try {
-        res.json(user_recommendation_latestmonth);
-    } catch (err) {
-        console.log(err);
-    }
+    
 
 })
 
