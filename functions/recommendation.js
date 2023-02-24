@@ -162,8 +162,6 @@ const getRecommendation = function (allUserData) {
         );
       userDataWithNegativeImprovement.map(
         (user_improvement_at_each_movement) => {
-        
-          const section_info = getSectionAndWodTheme(user_improvement_at_each_movement.movement);
           
           recommendation.push({
             movement: user_improvement_at_each_movement.movement,
@@ -171,8 +169,8 @@ const getRecommendation = function (allUserData) {
               reason: 'decline_in_performance',
               improvement: user_improvement_at_each_movement.improvement,
             },
-            section: section_info.section,
-            wod_theme:section_info.instruction.wod_theme
+            section: getSectionAndWodTheme(user_improvement_at_each_movement.movement).section,
+            wod_theme:getSectionAndWodTheme(user_improvement_at_each_movement.movement).instruction.wod_theme
           });
         }
       );
