@@ -35,7 +35,7 @@ const getImprovement = function (user_assessment_data) {
   const unique_user_name = Array.from(new Set(user_assessment_data.map((item) => item.name)));
 
   
-  const improvementData = []
+  const improvementDataPerUserPerMonth = []
   for (let i = 0; i < unique_user_name.length; i++) { // calc improvement data for user 1 by 1
     const userName = unique_user_name[i]
     // console.log(userName);
@@ -55,22 +55,22 @@ const getImprovement = function (user_assessment_data) {
 
       // console.log(currentMonthData);
 
-      const monthylImprovement = []
-      currentMonthData.performance.map(p => {
+      const monthylImprovementPerMovement = []
+      currentMonthData.performance.map(p => { // calc improvement per movement
         const prev_month_performance = previousMonthData.performance.filter(prev_p => prev_p.movement == p.movement)[0]
         const improvement = p.performance - prev_month_performance.performance
-        monthylImprovement.push({
+        monthylImprovementPerMovement.push({
           movement: p.movement,
           improvement: improvement
         })
       })
 
-      improvementData.push({
+      improvementDataPerUserPerMonth.push({
         "name": userName,
         code : currentMonthData.code,
         "assessmentMonth": currentMonthData.assessmentMonth,
         "Gap": getGap(currentMonthData.assessmentMonth, previousMonthData.assessmentMonth),
-        "improvement": monthylImprovement,
+        "improvement": monthylImprovementPerMovement,
         scorePerCategory: currentMonthData.scorePerCategory
       });
     }
@@ -78,7 +78,7 @@ const getImprovement = function (user_assessment_data) {
   }
 
   // console.log(improvementData);
-  return improvementData
+  return improvementDataPerUserPerMonth
 
 }
 
