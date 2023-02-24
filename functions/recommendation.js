@@ -111,10 +111,11 @@ const movements = [
 
      axios.get('https://on-the-move.onrender.com/api/v1/assessment/test').then((result) => {
        section_wod_theme = result.data;
+       console.log(section_wod_theme)
     }).catch((err) => {
       console.log(err);
     });
-
+    
     const getSectionAndWodTheme = function (movement) {
       const section_wod_theme_per_movement = section_wod_theme.filter(
         (prev_p) => prev_p.movement == movement
