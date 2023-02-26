@@ -2,12 +2,10 @@ const axios = require('axios');
     
 const getMovementInfo = async () => {
 
-    console.log("fetching data");
+    // console.log("fetching data");
     const res = await axios.get('https://on-the-move.onrender.com/api/v1/assessment/test')
     // console.log(res.data);
     return res.data
-    
-
 }
 
 // finding weakest category
@@ -16,8 +14,8 @@ const getWeakestCategory = function (scorePerCategory) {
     weakestCategory;
   for (let i = 0; i < scorePerCategory.length; i++) {
     if (scorePerCategory[i].score < score) {
-      score = scorePerCategory[i].score;
-      weakestCategory = scorePerCategory[i].category;
+        score = scorePerCategory[i].score;
+        weakestCategory = scorePerCategory[i].category;
     }
   }
   return weakestCategory;
@@ -37,7 +35,7 @@ const getRecommendation = async (allUserData) => {
 
 
     const movementInfo = await getMovementInfo()
-    console.log("data fetched");
+    // console.log("data fetched");
     // return
     const recommendationAllUsers = [];
 

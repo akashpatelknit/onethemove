@@ -20,7 +20,7 @@ const getGap = (current_month_data, previous_month_data) => {
   const previous_year = previous_month_data.year;
 
   const year_diff = current_year - previous_year;
-
+~
   var gap = current_month - previous_month;
   if (year_diff >= 1) {
     gap = 12 - previous_month + current_month + 12 * (year_diff - 1);
