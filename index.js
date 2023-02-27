@@ -5,9 +5,11 @@ app.use(express.json());
 const port=process.env.PORT || 3000;
 mongoose.set('strictQuery', false);
 
-const assessmentInsightsController = require('./controller/insight/assessmentInsight')
+const assessmentInsightsController = require('./controller/insight/assessmentInsightController')
+const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
 
 app.use('/insight/assessment',assessmentInsightsController)
+app.use('/insight/consistency',consistencyInsightsController)
 
 app.listen(port, () => {
     console.log(`Server started at port ${port}`)
