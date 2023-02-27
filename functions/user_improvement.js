@@ -13,7 +13,7 @@ const customsort = (a, b) => {
 
 const getGap = (current_month_data, previous_month_data) => {
 
-  // console.log(current_month_data, previous_month_data);
+
   const current_month = current_month_data.month;
   const previous_month = previous_month_data.month;
   const current_year = current_month_data.year;
@@ -38,13 +38,18 @@ const getImprovement = function (user_assessment_data) {
   const improvementDataPerUserPerMonth = []
   for (let i = 0; i < unique_user_name.length; i++) { // calc improvement data for user 1 by 1
     const userName = unique_user_name[i]
-    // console.log(userName);
+
     const userDataAllMonths = user_assessment_data.filter(data => data.name == userName)
 
-
-  
     if (userDataAllMonths.length == 1) { // only 1 month's data present 
-      // console.log("skipping ",userDataAllMonths[0].name);
+       improvementDataPerUserPerMonth.push({
+        "name": userDataAllMonths[0].name,
+        "code" : userDataAllMonths[0].code,
+        "assessmentMonth": userDataAllMonths[0].assessmentMonth,
+        "improvement":[],
+        scorePerCategory: userDataAllMonths[0].scorePerCategory
+      });
+
       continue;
     }
 
@@ -53,7 +58,6 @@ const getImprovement = function (user_assessment_data) {
       const currentMonthData = userDataAllMonths[i];
       const previousMonthData = userDataAllMonths[i+1];
 
-      // console.log(currentMonthData);
 
       const monthylImprovementPerMovement = []
       currentMonthData.performance.map(p => { // calc improvement per movement
@@ -67,7 +71,7 @@ const getImprovement = function (user_assessment_data) {
 
       improvementDataPerUserPerMonth.push({
         "name": userName,
-        code : currentMonthData.code,
+        "code" : currentMonthData.code,
         "assessmentMonth": currentMonthData.assessmentMonth,
         "Gap": getGap(currentMonthData.assessmentMonth, previousMonthData.assessmentMonth),
         "improvement": monthylImprovementPerMovement,
@@ -77,7 +81,7 @@ const getImprovement = function (user_assessment_data) {
       
   }
 
-  // console.log(improvementData);
+
   return improvementDataPerUserPerMonth
 
 }

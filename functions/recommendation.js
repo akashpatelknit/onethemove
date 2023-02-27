@@ -1,14 +1,18 @@
 const axios = require('axios');
-    
+const getSHREDInfo = async () => {
+  const res = await axios.get(
+    'https://on-the-move.onrender.com/api/v1/client/?batch=SHRED'
+  );
+  return res.data;
+};
+
+// finding movement information
 const getMovementInfo = async () => {
-
-    console.log("fetching data");
-    const res = await axios.get('https://on-the-move.onrender.com/api/v1/assessment/test')
-    // console.log(res.data);
-    return res.data
-    
-
-}
+  const res = await axios.get(
+    'https://on-the-move.onrender.com/api/v1/assessment/test'
+  );
+  return res.data;
+};
 
 // finding weakest category
 const getWeakestCategory = function (scorePerCategory) {
@@ -22,8 +26,12 @@ const getWeakestCategory = function (scorePerCategory) {
   }
   return weakestCategory;
 };
+
 // finding recommendation for weakest category
-const getRecommendationBasedOnWeakestCategory = function (weakest_score_category, movementInfo) {
+const getRecommendationBasedOnWeakestCategory = function (
+  weakest_score_category,
+  movementInfo
+) {
   var arr = [];
   movementInfo.map((item) => {
     if (weakest_score_category == item.category) {
@@ -34,75 +42,99 @@ const getRecommendationBasedOnWeakestCategory = function (weakest_score_category
 };
 
 const getRecommendation = async (allUserData) => {
+  const shareddaata = await getSHREDInfo();
+  const movementInfo = await getMovementInfo();
+  const recommendationAllUsers = [];
 
-
-    const movementInfo = await getMovementInfo()
-    console.log("data fetched");
-    // return
-    const recommendationAllUsers = [];
-
-    let previousMonthUser = '@';
-    allUserData.map((userImprovementData) => {
-        const recommendation = [];
-        if (previousMonthUser != userImprovementData.name) { // assumption allUserData -> sorted using name, time(desc)
+  let previousMonthUser = '@';
+  allUserData.map((userImprovementData) => {
+    const recommendation = [];
+    let userName = shareddaata.filter((name)=> {
+      return name.name == userImprovementData.name;
+    })[0];
+    if (userName) {
+      if (previousMonthUser != userImprovementData.name) {
+        // assumption allUserData - sorted using name, time(desc)
         previousMonthUser = userImprovementData.name;
-
+        
         // filter
-        const movementsWithNegativeImprovement = userImprovementData.improvement.filter(
+        
+        const movementsWithNegativeImprovement =
+          userImprovementData.improvement.filter(
             (improvementPerMovement) => improvementPerMovement.improvement < 0
-            );
+          );
 
-        // console.log(movementsWithNegativeImprovement);
-        
-        
+       
+        movementsWithNegativeImprovement.map((movement) => {
+          const movementDetails = movementInfo.filter(
+            (m) => m.movement == movement.movement
+          )[0];
+          recommendation.push({
+            movement: movement.movement,
+            info: {
+              reason: 'decline_in_performance',
+              improvement: movement.improvement,
+            },
+            section: movementDetails.section,
+            wod_theme: movementDetails.instruction.wod_theme,
+          });
+        });
 
-        
-            
-        movementsWithNegativeImprovement.map((movement) => { 
-            const movementDetails = movementInfo.filter(m => m.movement == movement.movement)[0]
-            recommendation.push({
-                movement: movement.movement,
-                info: {
-                    reason: 'decline_in_performance',
-                    improvement: movement.improvement,
-                },
-                section: movementDetails.section,
-                wod_theme: movementDetails.instruction.wod_theme
-            });
-            }
-        );
-
-        const weakestCategoryMovementNames = getRecommendationBasedOnWeakestCategory(
+        const weakestCategoryMovementNames =
+          getRecommendationBasedOnWeakestCategory(
             getWeakestCategory(userImprovementData.scorePerCategory),
             movementInfo
-            );
+          );
 
-        // console.log(weakestCategoryMovementNames);
-
-        
         weakestCategoryMovementNames.map((n) => {
-            const movementDetails = movementInfo.filter(m => m.movement == n)[0]
-            recommendation.push({
-                movement: n,
-                info: {
-                    reason: 'weakest_category',
-                },
-                section: movementDetails.section,
-                wod_theme: movementDetails.instruction.wod_theme
-            });
+          const movementDetails = movementInfo.filter(
+            (m) => m.movement == n
+          )[0];
+          recommendation.push({
+            movement: n,
+            info: {
+              reason: 'weakest_category',
+            },
+            section: movementDetails.section,
+            wod_theme: movementDetails.instruction.wod_theme,
+          });
         });
 
         recommendationAllUsers.push({
-            name: userImprovementData.name,
-            code: userImprovementData.code,
-            assessmentMonth: userImprovementData.assessmentMonth,
-            Gap: userImprovementData.Gap,
-            recommendation: recommendation,
+          name: userImprovementData.name,
+          code: userImprovementData.code,
+          assessmentMonth: userImprovementData.assessmentMonth,
+          Gap: userImprovementData.Gap,
+          recommendation: recommendation,
         });
-        }
-    });
-    
-    return recommendationAllUsers;
+      }
+    } else {
+      const weakestCategoryMovementNames =
+        getRecommendationBasedOnWeakestCategory(
+          getWeakestCategory(userImprovementData.scorePerCategory),
+          movementInfo
+        );
+      weakestCategoryMovementNames.map((n) => {
+        const movementDetails = movementInfo.filter((m) => m.movement == n)[0];
+        recommendation.push({
+          movement: n,
+          info: {
+            reason: 'weakest_category',
+          },
+          section: movementDetails.section,
+          wod_theme: movementDetails.instruction.wod_theme,
+        });
+      });
+      recommendationAllUsers.push({
+        name: userImprovementData.name,
+        code: userImprovementData.code,
+        assessmentMonth: userImprovementData.assessmentMonth,
+        recommendation: recommendation,
+      });
+    }
+  });
+
+  return recommendationAllUsers;
 };
 
 module.exports = {
