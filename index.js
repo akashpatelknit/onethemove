@@ -7,9 +7,11 @@ mongoose.set('strictQuery', false);
 
 const assessmentInsightsController = require('./controller/insight/assessmentInsightController')
 const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
+const averageintensityController=require('./controller/insight/averageintensity');
 
 app.use('/insight/assessment',assessmentInsightsController)
 app.use('/insight/consistency',consistencyInsightsController)
+app.use('/insight/averageintensity',averageintensityController)
 
 app.listen(port, () => {
     console.log(`Server started at port ${port}`)
