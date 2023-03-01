@@ -63,12 +63,14 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
+          displayText: `Since your performance declined in ${movement.movement} please perform 3 rounds of ${movementDetails.instruction.title}`
         });
       });
 
+      const weakestCategory = getWeakestCategory(userImprovementData.scorePerCategory)
       const weakestCategoryMovementNames =
         getRecommendationBasedOnWeakestCategory(
-          getWeakestCategory(userImprovementData.scorePerCategory),
+          weakestCategory,
           movementInfo
         );
 
@@ -83,6 +85,8 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
+          displayText: `Since ${weakestCategory} is your weakest category, please perform 3 rounds of ${movementDetails.instruction.title}`
+
         });
       });
 
