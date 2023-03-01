@@ -30,7 +30,6 @@ const getMovementInfo = async () => {
 const getIntensity = async () => {
  const res=await axios.get('https://on-the-move.onrender.com/api/v1/collection?name=intensity'
  );
- console.log(res)
  return res.data;
 };
 
