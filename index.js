@@ -7,7 +7,7 @@ mongoose.set('strictQuery', false);
 
 const assessmentInsightsController = require('./controller/insight/assessmentInsightController')
 const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
-const averageintensityController=require('./controller/insight/averageintensity');
+const averageintensityController=require('./controller/insight/averageIntensityController');
 
 app.use('/insight/assessment',assessmentInsightsController)
 app.use('/insight/consistency',consistencyInsightsController)
