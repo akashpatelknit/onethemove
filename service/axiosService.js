@@ -6,6 +6,7 @@ const getAssessmentData = async () => {
 
   return res.data
 }
+
 const getBatchMembers = async () => {
 
   const res = await axios.get('https://on-the-move.onrender.com/api/v1/client/?batch=SHRED')
@@ -33,10 +34,17 @@ const getIntensity = async () => {
  return res.data;
 };
 
+const getCollectionData = async (collectionName) => {
+  const res=await axios.get(`https://on-the-move.onrender.com/api/v1/collection?name=${collectionName}`
+  );
+  return res.data;
+ };
+
 module.exports = {
   getAssessmentData,
   getBatchMembers,
   getAttendanceData,
   getMovementInfo,
-  getIntensity
+  getIntensity,
+  getCollectionData
 }

@@ -3,7 +3,7 @@ const { getAverageIntensity } = require('../../service/insight/assessmentInsight
 const router = express.Router();
 
 
-router.get("/", async (req, res) => {
+router.get("/workout/average", async (req, res) => {
     
     const intensity = await getAverageIntensity();
     res.json(intensity);
