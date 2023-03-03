@@ -1,5 +1,13 @@
 const axios=require('axios')
 
+
+const getMemberName = async () => {
+
+  const res = await axios.get('https://on-the-move.onrender.com/api/v1/collection?name=members')
+  
+  return res.data
+}
+
 const getAssessmentData = async () => {
 
     const res = await axios.get('https://on-the-move.onrender.com/api/v1/collection?name=monthlyAssessment')
@@ -31,5 +39,6 @@ module.exports = {
     getAssessmentData,
     getBatchMembers,
     getAttendanceData,
-    getMovementInfo
+    getMovementInfo,
+    getMemberName
 }
