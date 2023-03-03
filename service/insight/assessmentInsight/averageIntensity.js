@@ -1,8 +1,9 @@
 
-const { getIntensity } = require("../../axiosService");
+const { getAll } = require("../../../db/db");
+const { DB_COLLECTION } = require("../../../db/dbDetails");
 
 const getAverageIntensity=async ()=>{
-  const u_data=await getIntensity();
+  const u_data=await getAll(DB_COLLECTION.INTENSITY); 
 
 
 const unique_user_title = [...new Set(u_data.map(item=> item.title))];

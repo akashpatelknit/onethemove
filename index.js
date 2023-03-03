@@ -9,12 +9,15 @@ const assessmentInsightsController = require('./controller/insight/assessmentIns
 const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
 const averageintensityController=require('./controller/insight/averageIntensityController');
 const workoutController=require('./controller/workoutController');
+const { initDB } = require('./db/db');
 
 app.use('/insight/assessment',assessmentInsightsController)
 app.use('/insight/consistency',consistencyInsightsController)
 app.use('/insight/intensity',averageintensityController)
 app.use('/workout',workoutController)
 
-app.listen(port, () => {
+app.listen(port, async () => {
+    await initDB()
     console.log(`Server started at port ${port}`)
+    
 })

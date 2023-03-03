@@ -1,11 +1,13 @@
 
+const { getAll } = require("../../../db/db");
+const { DB_COLLECTION } = require("../../../db/dbDetails");
 const { getAttendanceData, getCollectionData } = require("../../axiosService");
 
 
 const getWorkoutAttendance = async ()=> { 
   
-  const attendanceData = await getAttendanceData();
-  const memberData = await getCollectionData('members')
+  const attendanceData = await getAll(DB_COLLECTION.ATTENDANCE);
+  const memberData = await getAll(DB_COLLECTION.MEMBER)
 
   let attendance_day_title=[...new Set(attendanceData.map(item=> item.title))];
   attendance_day_title=attendance_day_title.filter(a=>a!="x")
