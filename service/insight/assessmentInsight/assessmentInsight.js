@@ -4,7 +4,9 @@ const { getAssessmentData } = require("../../axiosService");
 const { getRecommendation } = require("./recommendation");
 const { getImprovement } = require("./user_improvement");
 
-
+// calc all users
+// new func -> 1 user
+// call new func 1  by 1 for all users
 const getAssessmentInsight = async () => {
 
     const user_assessment_data =await getAll(DB_COLLECTION.ASSESSMENT);

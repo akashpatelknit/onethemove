@@ -6,8 +6,11 @@ const { getWorkoutAttendance } = require("./insight/consistency/insight_attendan
 const getWorkoutDetails = async (batchName, title, memberName, theme) => {
     
 
-    const assessmentInsight = await getAssessmentInsight();
-    const workoutAttendance = await getWorkoutAttendance();
+    const assessmentInsight = await getAssessmentInsight(); // call new func // calc only for 1 user // moveme
+    // const assessmentInsight = await newFunc(memberName);
+    const workoutAttendance = await getWorkoutAttendance(title); // 
+
+    // intensity // memberName (calc last 5 intensity average)
 
     console.log()
 
