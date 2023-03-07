@@ -1,38 +1,33 @@
-const { getAssessmentInsight } = require("../service/insight/assessmentInsight/assessmentInsight");
-const { getWorkoutAttendance } = require("./insight/consistency/insight_attendance");
-
-
+const {
+  getAssessmentInsight,
+} = require('../service/insight/assessmentInsight/assessmentInsight');
+const {
+  getWorkoutAttendance,
+} = require('./insight/consistency/insight_attendance');
 
 const getWorkoutDetails = async (batchName, title, memberName, theme) => {
-    
+  const memberRecommendation = await getAssessmentInsight(memberName);
+  const workoutAttendance = await getWorkoutAttendance();
+  const b = workoutAttendance.filter((a) => a.title == title);
 
-    const assessmentInsight = await getAssessmentInsight();
-    const workoutAttendance = await getWorkoutAttendance();
+  const workoutDetails = [
+    {
+      code: 'START',
+      sectionMain: workoutAttendance.filter((a) => a.title == title)[0]
+        .displayText,
+    },
+  ];
 
-    console.log()
+  memberRecommendation[0].recommendation.map((r) => {
+    workoutDetails.push({
+      code: r.section,
+      sectionFooter: r.displayText,
+    });
+  });
 
-    const workoutDetails = [{
-        code: 'START',
-        sectionMain: workoutAttendance.filter(a => a.title == title)[0].displayText
-
-    }]
-    const memberAssessmentInsight = assessmentInsight.filter(i => 
-        i.name == memberName)[0]
-    const memberRecommendation = memberAssessmentInsight.recommendation.filter(r => 
-        r.wod_theme == theme) 
-    memberRecommendation.map(r => {
-        workoutDetails.push({
-            code: r.section,
-            sectionFooter: r.displayText
-        })
-    })
-    
-
-    return workoutDetails
-
-
-}
+  return workoutDetails
+};
 
 module.exports = {
-    getWorkoutDetails
-}
+  getWorkoutDetails,
+};
