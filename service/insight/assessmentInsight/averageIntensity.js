@@ -8,6 +8,8 @@ const getAverageIntensity=async ()=>{
 
 const unique_user_title = [...new Set(u_data.map(item=> item.title))];
 
+
+
 const avgIntensity = [];
 unique_user_title.map((item) => {
   const user_per_day = u_data.filter((data) => data.title == item);
