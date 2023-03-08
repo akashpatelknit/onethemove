@@ -9,13 +9,13 @@ let getWorkoutAttendance = async (title) => {
     const memberData = await getAll(DB_COLLECTION.MEMBER);
     const attendance_day_title=attendanceData.filter(a=>a.title==title);
    
-    let user_code=[];
+    
     let count_user=attendance_day_title.length;
    
-    attendance_day_title.map((a)=>{
-        
-        user_code.push(a.member_code)
-    })
+    // console.log(attendance_day_title);
+    let user_code = attendance_day_title.map((a) => a.member_code)
+    // console.log(user_code);
+
     let displayText = 'You are the first one to do this workout'
     if (count_user == 1) {
       displayText = `${memberData.filter(m => m.code == user_code[0])[0].name} has completed this workout`
