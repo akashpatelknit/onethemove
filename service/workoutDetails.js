@@ -8,7 +8,7 @@ const getWorkoutDetails = async (batchName, title, memberName, theme) => {
 
     const memberRecommendation = await getAssessmentInsight(memberName); // call new func // calc only for 1 user // moveme
     // const assessmentInsight = await newFunc(memberName);
-    const workoutAttendance = await getWorkoutAttendance(); // 
+    const workoutAttendance = await getWorkoutAttendance(title); // 
     // intensity // memberName (calc last 5 intensity average)
 
 

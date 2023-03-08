@@ -32,7 +32,10 @@ const getRecommendationBasedOnWeakestCategory =  (
 // allUserData => improvement for everyone who has done assessment
 const getRecommendation = async (allUserData) => {
  
-  const movementInfo=await getAll(DB_COLLECTION.ASSESSMENTINFO); 
+  const movementInfo=await getAll(DB_COLLECTION.ASSESSMENTINFO, {
+    programme: "SHRED"
+  }); 
+  const shredTests = movementInfo[0].assessment
 
   const recommendationAllUsers = [];
 
@@ -54,7 +57,7 @@ const getRecommendation = async (allUserData) => {
 
      
       movementsWithNegativeImprovement.map((movement) => {
-        const movementDetails = movementInfo[0].assessment.filter(
+        const movementDetails = shredTests.filter(
           (m) => m.movement == movement.movement
         )[0];
         recommendation.push({
@@ -73,11 +76,11 @@ const getRecommendation = async (allUserData) => {
       const weakestCategoryMovementNames =
         getRecommendationBasedOnWeakestCategory(
           weakestCategory,
-          movementInfo[0].assessment
+          shredTests
         );
 
       weakestCategoryMovementNames.map((n) => {
-        const movementDetails = movementInfo[0].assessment.filter(
+        const movementDetails = shredTests.filter(
           (m) => m.movement == n
         )[0];
         recommendation.push({
