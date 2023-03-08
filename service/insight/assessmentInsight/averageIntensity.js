@@ -1,4 +1,3 @@
-
 const { getAll } = require("../../../db/db");
 const { DB_COLLECTION } = require("../../../db/dbDetails");
 

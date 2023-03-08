@@ -33,8 +33,8 @@ const getWorkoutDetails = async (batchName, title, memberName, theme) => {
         })
     })
 
-
-    return workoutDetails
+    return intensity5_user
+    // return workoutDetails
 
 
 }
