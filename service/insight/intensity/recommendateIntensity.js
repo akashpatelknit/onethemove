@@ -1,7 +1,7 @@
 const { getAll } = require("../../../db/db");
 const { DB_COLLECTION } = require("../../../db/dbDetails");
 
-const getAverageIntensity = async (memberName) => {
+const getAverage_5_Intensity = async (memberName) => {
   const u_data = await getAll(DB_COLLECTION.INTENSITY);
   const u_name = await getAll(DB_COLLECTION.MEMBER);
 
@@ -32,5 +32,5 @@ const getAverageIntensity = async (memberName) => {
 
 }
 module.exports = {
-  getAverageIntensity
+  getAverage_5_Intensity
 }
