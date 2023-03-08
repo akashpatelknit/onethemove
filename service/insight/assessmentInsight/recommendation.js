@@ -1,5 +1,5 @@
-const { getMovementInfo} = require('../../axiosService');
-
+const { getAll } = require("../../../db/db");
+const { DB_COLLECTION } = require("../../../db/dbDetails");
 
 // finding weakest category
 const getWeakestCategory = (scorePerCategory) => {
@@ -31,7 +31,9 @@ const getRecommendationBasedOnWeakestCategory =  (
 
 // allUserData => improvement for everyone who has done assessment
 const getRecommendation = async (allUserData) => {
-  const movementInfo = await getMovementInfo();
+ 
+  const movementInfo=await getAll(DB_COLLECTION.ASSESSMENTINFO); 
+
   const recommendationAllUsers = [];
 
   let previousMonthUser = '@';
@@ -52,7 +54,7 @@ const getRecommendation = async (allUserData) => {
 
      
       movementsWithNegativeImprovement.map((movement) => {
-        const movementDetails = movementInfo.filter(
+        const movementDetails = movementInfo[0].assessment.filter(
           (m) => m.movement == movement.movement
         )[0];
         recommendation.push({
@@ -71,11 +73,11 @@ const getRecommendation = async (allUserData) => {
       const weakestCategoryMovementNames =
         getRecommendationBasedOnWeakestCategory(
           weakestCategory,
-          movementInfo
+          movementInfo[0].assessment
         );
 
       weakestCategoryMovementNames.map((n) => {
-        const movementDetails = movementInfo.filter(
+        const movementDetails = movementInfo[0].assessment.filter(
           (m) => m.movement == n
         )[0];
         recommendation.push({

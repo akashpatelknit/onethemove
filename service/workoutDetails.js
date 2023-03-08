@@ -6,31 +6,26 @@ const { getWorkoutAttendance } = require("./insight/consistency/insight_attendan
 const getWorkoutDetails = async (batchName, title, memberName, theme) => {
     
 
-    const assessmentInsight = await getAssessmentInsight(); // call new func // calc only for 1 user // moveme
+    const memberRecommendation = await getAssessmentInsight(memberName); // call new func // calc only for 1 user // moveme
     // const assessmentInsight = await newFunc(memberName);
-    const workoutAttendance = await getWorkoutAttendance(title); // 
-
+    const workoutAttendance = await getWorkoutAttendance(); // 
     // intensity // memberName (calc last 5 intensity average)
 
-    console.log()
 
     const workoutDetails = [{
         code: 'START',
         sectionMain: workoutAttendance.filter(a => a.title == title)[0].displayText
 
     }]
-    const memberAssessmentInsight = assessmentInsight.filter(i => 
-        i.name == memberName)[0]
-    const memberRecommendation = memberAssessmentInsight.recommendation.filter(r => 
-        r.wod_theme == theme) 
-    memberRecommendation.map(r => {
+   
+    memberRecommendation[0].recommendation.map(r => {
         workoutDetails.push({
             code: r.section,
             sectionFooter: r.displayText
         })
     })
     
-
+  
     return workoutDetails
 
 
