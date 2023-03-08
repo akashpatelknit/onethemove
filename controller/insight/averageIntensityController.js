@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAverageIntensity } = require('../../service/insight/assessmentInsight/averageIntensity');
+const { getAverageIntensity } = require('../../service/insight/intensity/averageIntensity');
 const router = express.Router();
 
 

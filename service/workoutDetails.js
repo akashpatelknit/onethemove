@@ -1,6 +1,6 @@
 const { getAssessmentInsight } = require("../service/insight/assessmentInsight/assessmentInsight");
 const { getWorkoutAttendance } = require("./insight/consistency/insight_attendance");
-const { getAverage_5_Intensity } = require("../service/insight/assessmentInsight/test");
+const { getAverage_5_Intensity } = require("../service/insight/intensity/test");
 
 
 
