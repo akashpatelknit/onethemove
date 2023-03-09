@@ -41,12 +41,13 @@ const getRecommendation = async (allUserData) => {
 
   let previousMonthUser = '@';
   allUserData.map((userImprovementData) => {
+    const memberName = userImprovementData.name
     const recommendation = [];
 
     // console.log(userImprovementData.name);
-    if (previousMonthUser != userImprovementData.name) {
+    if (previousMonthUser != memberName) {
       // assumption allUserData - sorted using name, time(desc)
-      previousMonthUser = userImprovementData.name;
+      previousMonthUser = memberName;
       
       // filter
       
@@ -68,7 +69,7 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `Since your performance declined in ${movement.movement} please perform 3 rounds of ${movementDetails.instruction.title}`
+          displayText: `${memberName}, since your performance declined in ${movement.movement} please perform:\n 3 rounds \n${movementDetails.instruction.title}`
         });
       });
 
@@ -90,13 +91,13 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `Since ${weakestCategory} is your weakest category, please perform 3 rounds of ${movementDetails.instruction.title}`
+          displayText: `${memberName}, since ${weakestCategory} is your weakest category, please perform:\n 3 rounds\n ${movementDetails.instruction.title}`
 
         });
       });
 
       recommendationAllUsers.push({
-        name: userImprovementData.name,
+        name: memberName,
         code: userImprovementData.code,
         assessmentMonth: userImprovementData.assessmentMonth,
         Gap: userImprovementData.Gap,
