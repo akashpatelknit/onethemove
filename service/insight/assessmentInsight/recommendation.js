@@ -69,7 +69,7 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `\nConquer the Weakness: \n${memberName}, since your performance declined in ${movement.movement} please perform: \n3 rounds \n${movementDetails.instruction.title}`
+          displayText: `\nConquer the Weakness: \n${memberName}, since your performance declined in ${movement.movement} please perform: \n3 rounds \n${movementDetails.instruction.title}\n`
         });
       });
 
@@ -91,7 +91,7 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `\nConquer the Weakness: \n${memberName}, since ${weakestCategory} is your weakest category, please perform: \n3 rounds \n${movementDetails.instruction.title}`
+          displayText: `\nConquer the Weakness: \n${memberName}, since ${weakestCategory} is your weakest category, please perform: \n3 rounds \n${movementDetails.instruction.title}\n`
 
         });
       });
