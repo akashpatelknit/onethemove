@@ -7,7 +7,8 @@ const DB_COLLECTION = {
     WORKOUT: 'workout',
     ATTENDANCE: 'workoutPerformance',
     SCORE: 'workoutSummary',
-    ASSESSMENTINFO:'assessmentInfo'
+    ASSESSMENTINFO:'assessmentInfo',
+    WORKOUTSUMMARY:'workoutSummary'
   }
 
 

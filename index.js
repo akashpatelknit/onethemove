@@ -10,13 +10,15 @@ const assessmentInsightsController = require('./controller/insight/assessmentIns
 const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
 const averageintensityController=require('./controller/insight/averageIntensityController');
 const workoutController=require('./controller/workoutController');
+
+const recom=require('./controller/insight/recom')
 const { initDB } = require('./db/db');
 
 app.use('/insight/assessment',assessmentInsightsController)
 app.use('/insight/consistency',consistencyInsightsController)
 app.use('/insight/intensity',averageintensityController)
 app.use('/workout',workoutController)
-
+app.use('/recom',recom);
 app.get("/health", async (req, res) => {
     res.json("service is running");
 
