@@ -6,10 +6,10 @@ const { getAttendanceData, getCollectionData } = require("../../axiosService");
 
 let getWorkoutAttendance = async (title) => { 
   const attendanceData =  await getAll(DB_COLLECTION.ATTENDANCE);
+  
     const memberData = await getAll(DB_COLLECTION.MEMBER);
     const attendance_day_title=attendanceData.filter(a=>a.title==title);
    
-    
     let count_user=attendance_day_title.length;
    
     // console.log(attendance_day_title);
