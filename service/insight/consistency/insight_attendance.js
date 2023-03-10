@@ -1,7 +1,7 @@
 
 const { getAll } = require("../../../db/db");
 const { DB_COLLECTION } = require("../../../db/dbDetails");
-const { getAttendanceData, getCollectionData } = require("../../axiosService");
+const { getRandom } = require("../../util");
 // const { ans}= require("./insight_attendance_unique_title");
 
 let getWorkoutAttendance = async (title, batchName) => { 
@@ -16,7 +16,7 @@ let getWorkoutAttendance = async (title, batchName) => {
   
   // console.log(attendance_day_title);
   let user_code = attendance_day_title.map((a) => a.member_code)
-  // console.log(user_code);
+  console.log(user_code);
 
   let displayText = 'You are the first one to do this workout'
   if (count_user == 1) {
@@ -24,7 +24,9 @@ let getWorkoutAttendance = async (title, batchName) => {
   } else if (count_user == 2) {
     displayText = `${memberData.filter(m => m.code == user_code[0])[0].name} and ${memberData.filter(m => m.code == user_code[1])[0].name} have completed this workout`
   } else if (count_user > 2) {
-    displayText = `${memberData.filter(m => m.code == user_code[0])[0].name}, ${memberData.filter(m => m.code == user_code[1])[0].name} and ${count_user - 2} others have completed this workout`
+    const attendedMembers = getRandom(memberData.filter(m => user_code.includes(m.code)),2)
+    // console.log(attendedMembers);
+    displayText = `${attendedMembers[0].name}, ${attendedMembers[1].name} and ${count_user - 2} others have completed this workout`
 
   }
   const user_attendendant_data=[];

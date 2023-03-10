@@ -1,6 +1,5 @@
 const { getAll } = require("../../../db/db");
 const { DB_COLLECTION } = require("../../../db/dbDetails");
-const { getAssessmentData } = require("../../axiosService");
 const { getRecommendation } = require("./recommendation");
 const { getImprovement } = require("./user_improvement");
 

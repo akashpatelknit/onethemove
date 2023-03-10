@@ -46,18 +46,21 @@ const getRecommendation = async (allUserData) => {
 
     // console.log(userImprovementData.name);
     if (previousMonthUser != memberName) {
+
       // assumption allUserData - sorted using name, time(desc)
       previousMonthUser = memberName;
       
-      // filter
-      
-      const movementsWithNegativeImprovement =
-        userImprovementData.improvement.filter(
-          (improvementPerMovement) => improvementPerMovement.improvement < 0
-        );
+      const movementsWithNegativeImprovement = userImprovementData.improvement.filter((m) => m.improvement < 0);
 
+      const weakestCategory = getWeakestCategory(userImprovementData.scorePerCategory)
+      const weakestMovements = getRecommendationBasedOnWeakestCategory(weakestCategory, shredTests);
      
-      movementsWithNegativeImprovement.map((movement) => {
+      // filter out duplicate mvmts
+      const negImprovementMovement = movementsWithNegativeImprovement.filter(m => !weakestMovements.includes(m.movement))
+      console.log(movementsWithNegativeImprovement);
+      console.log(weakestMovements);
+
+      negImprovementMovement.map((movement) => {
         const movementDetails = shredTests.filter(
           (m) => m.movement == movement.movement
         )[0];
@@ -72,15 +75,8 @@ const getRecommendation = async (allUserData) => {
           displayText: `\nConquer the Weakness: \n${memberName}, since your performance declined in ${movement.movement} please perform: \n3 rounds \n${movementDetails.instruction.title}\n`
         });
       });
-
-      const weakestCategory = getWeakestCategory(userImprovementData.scorePerCategory)
-      const weakestCategoryMovementNames =
-        getRecommendationBasedOnWeakestCategory(
-          weakestCategory,
-          shredTests
-        );
-
-      weakestCategoryMovementNames.map((n) => {
+      
+      weakestMovements.map((n) => {
         const movementDetails = shredTests.filter(
           (m) => m.movement == n
         )[0];
