@@ -14,12 +14,14 @@ const getWorkoutDetails = async (batchName, title, memberName, theme) => {
     const workoutDetails = [
         {
             code: 'START',
-            sectionMain: workoutAttendance.filter(a => a.title == title)[0].displayText
+            sectionMain: workoutAttendance.filter(a => a.title == title)[0].displayText,
+            sectionFooter: ""
         },
         ...assessmentRecommendation[0].recommendation
         .filter(r => r.wod_theme == theme)
         .map(r => ({
             code: r.section,
+            sectionMain: "",
             sectionFooter: r.displayText
         }))
     ]
