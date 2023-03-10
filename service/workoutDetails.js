@@ -7,7 +7,7 @@ const getWorkoutDetails = async (batchName, title, memberName, theme) => {
     
 
     const assessmentRecommendation = await getAssessmentInsight(memberName); 
-    const workoutAttendance = await getWorkoutAttendance(title); 
+    const workoutAttendance = await getWorkoutAttendance(title, batchName); 
 
     // console.log(assessmentRecommendation[0].recommendation);
 
