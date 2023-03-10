@@ -1,5 +1,5 @@
-const { getMovementInfo} = require('../../axiosService');
-
+const { getAll } = require("../../../db/db");
+const { DB_COLLECTION } = require("../../../db/dbDetails");
 
 // finding weakest category
 const getWeakestCategory = (scorePerCategory) => {
@@ -31,17 +31,23 @@ const getRecommendationBasedOnWeakestCategory =  (
 
 // allUserData => improvement for everyone who has done assessment
 const getRecommendation = async (allUserData) => {
-  const movementInfo = await getMovementInfo();
+ 
+  const movementInfo=await getAll(DB_COLLECTION.ASSESSMENTINFO, {
+    programme: "SHRED"
+  }); 
+  const shredTests = movementInfo[0].assessment
+
   const recommendationAllUsers = [];
 
   let previousMonthUser = '@';
   allUserData.map((userImprovementData) => {
+    const memberName = userImprovementData.name
     const recommendation = [];
 
     // console.log(userImprovementData.name);
-    if (previousMonthUser != userImprovementData.name) {
+    if (previousMonthUser != memberName) {
       // assumption allUserData - sorted using name, time(desc)
-      previousMonthUser = userImprovementData.name;
+      previousMonthUser = memberName;
       
       // filter
       
@@ -52,7 +58,7 @@ const getRecommendation = async (allUserData) => {
 
      
       movementsWithNegativeImprovement.map((movement) => {
-        const movementDetails = movementInfo.filter(
+        const movementDetails = shredTests.filter(
           (m) => m.movement == movement.movement
         )[0];
         recommendation.push({
@@ -63,7 +69,7 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `Since your performance declined in ${movement.movement} please perform 3 rounds of ${movementDetails.instruction.title}`
+          displayText: `\nConquer the Weakness: \n${memberName}, since your performance declined in ${movement.movement} please perform: \n3 rounds \n${movementDetails.instruction.title}\n`
         });
       });
 
@@ -71,11 +77,11 @@ const getRecommendation = async (allUserData) => {
       const weakestCategoryMovementNames =
         getRecommendationBasedOnWeakestCategory(
           weakestCategory,
-          movementInfo
+          shredTests
         );
 
       weakestCategoryMovementNames.map((n) => {
-        const movementDetails = movementInfo.filter(
+        const movementDetails = shredTests.filter(
           (m) => m.movement == n
         )[0];
         recommendation.push({
@@ -85,13 +91,13 @@ const getRecommendation = async (allUserData) => {
           },
           section: movementDetails.section,
           wod_theme: movementDetails.instruction.wod_theme,
-          displayText: `Since ${weakestCategory} is your weakest category, please perform 3 rounds of ${movementDetails.instruction.title}`
+          displayText: `\nConquer the Weakness: \n${memberName}, since ${weakestCategory} is your weakest category, please perform: \n3 rounds \n${movementDetails.instruction.title}\n`
 
         });
       });
 
       recommendationAllUsers.push({
-        name: userImprovementData.name,
+        name: memberName,
         code: userImprovementData.code,
         assessmentMonth: userImprovementData.assessmentMonth,
         Gap: userImprovementData.Gap,

@@ -1,16 +1,18 @@
-const mongoose = require('mongoose');
 const express = require('express');
-const app = express();
-app.use(express.json());
-const port=process.env.PORT || 3000;
-mongoose.set('strictQuery', false);
-const router = express.Router();
-
+const cors = require('cors')
 const assessmentInsightsController = require('./controller/insight/assessmentInsightController')
 const consistencyInsightsController = require('./controller/insight/consistencyInsightController')
 const averageintensityController=require('./controller/insight/averageIntensityController');
 const workoutController=require('./controller/workoutController');
 const { initDB } = require('./db/db');
+const morgan = require('morgan');
+
+const app = express();
+app.use(cors())
+app.use(express.json());
+app.use(morgan('dev'))
+
+const port=process.env.PORT || 3000;
 
 app.use('/insight/assessment',assessmentInsightsController)
 app.use('/insight/consistency',consistencyInsightsController)
