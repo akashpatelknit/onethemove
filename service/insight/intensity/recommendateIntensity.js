@@ -1,36 +1,37 @@
 const { getAll } = require("../../../db/db");
 const { DB_COLLECTION } = require("../../../db/dbDetails");
 
-const getAverage_5_Intensity = async (memberName) => {
-  const u_data = await getAll(DB_COLLECTION.INTENSITY);
-  const u_name = await getAll(DB_COLLECTION.MEMBER);
+const MAX_INTENSITY = 150
 
-  const u_code=u_name.filter((data) => data.name===memberName);
+const getIntensityRecommendation = async (memberName, title, batchName) => {
+  const intensityData = await getAll(DB_COLLECTION.INTENSITY);
+  const memberData = await getAll(DB_COLLECTION.MEMBER);
+
+  const userCode=memberData.filter((member) => member.name===memberName)[0].code;
   
-  const u_info=u_data.filter((data)=> data.code===u_code[0].code)
+  const userIntensityData=intensityData.filter((data)=> data.code===userCode)
   // console.log(u_info);
  
-  var chunk = u_info.slice(0,5);
-  const intensity = chunk.map(item=> item.intensity);
+  var chunk = userIntensityData.slice(0,5);
+  // console.log(chunk);
 
-  const total = intensity.reduce((sum, item) => {
-    if(item>=100) return sum+100;
-    else return sum+item;
-  });
+  // const intensity = chunk.map(item=> item.intensity);
+  const total = chunk.reduce((sum, item) => {
+    console.log(item.intensity, sum);
+    if(item.intensity>=MAX_INTENSITY) return sum+MAX_INTENSITY;
+    else return sum+item.intensity;
+  }, 0);
 
-  // console.log(total)
+  console.log(total)
 
-  const avgIntensity = [];
-
-  avgIntensity.push({
+  return {
     name: memberName,
-    code: u_code[0].code,
-    avg_intensity: Math.round(total/intensity.length)
-  })
-
-  return avgIntensity;
+    code: userCode,
+    avgIntensity: Math.round(total/chunk.length),
+    recommendation: ""
+  }
 
 }
 module.exports = {
-  getAverage_5_Intensity
+  getIntensityRecommendation
 }
