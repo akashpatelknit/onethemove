@@ -1,22 +1,52 @@
 const { getAll } = require('../../../db/db');
 const { DB_COLLECTION } = require('../../../db/dbDetails');
-const { DETAILS, WEIGHT } = require('./rpes');
 
 const getRecom = async () => {
   const workoutSummary = await getAll(DB_COLLECTION.WORKOUTSUMMARY);
-  const user_with_data = workoutSummary.filter((r) => r.data != undefined);
-  const user_name = [...new Set(user_with_data.map((r) => r.name))];
-  const final = [];
-  user_with_data.map((r) => {
 
- 
+  const users_with_data = workoutSummary.filter((r) => r.data != undefined);
 
+  const unique_user_name = [...new Set(users_with_data.map((r) => r.name))];
 
+  const workoutMovementSummary=[]
+
+  unique_user_name.map((r) => {
+
+  const user_all_day_data = users_with_data.filter((name) => name.name == r);
+
+  const movement_array = [];
+  user_all_day_data.map((data) => {
+        
+        for (let key in data.data) {
+          if (
+            key.includes('rpe') ||
+            key.includes('reps') ||
+            key.includes('weight')
+          ) {
+           
+            var obj={}
+            obj[key]=data.data[key]
+            movement_array.push(
+            obj
+            )
+          }
+        }
   });
-  console.log(user_name);
+  
+  // const key=[]
+  // movement_array.map(key_name=>{
+  // key.push(Object.keys(key_name)[0])
+  // })
+  // let unique_key = [...new Set(key)]
 
-  return user_with_data;
-};
+     workoutMovementSummary.push({
+      name:r,
+      movements:movement_array
+     })
+  });
+
+  return workoutMovementSummary;
+}
 
 module.exports = {
   getRecom,
