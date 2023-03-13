@@ -1,18 +1,33 @@
 const { getAll } = require('../../../db/db');
 const { DB_COLLECTION } = require('../../../db/dbDetails');
 
-const getRecom = async () => {
+// break down function
+// not applicable -> don't push 
+
+
+
+// req to EP -> name, day (from req)
+// data = getRecom(name)
+// day -> workout fetch from DB
+// SAR, SR -> (mvmt in STR section)
+// iterate on these codes
+// SAR - > recommend if exists in data (latest weight)
+// recom -> response 
+
+
+const getRecom = async (memberName) => {
   const workoutSummary = await getAll(DB_COLLECTION.WORKOUTSUMMARY);
 
   const workoutData = workoutSummary.filter((r) => r.data != undefined);
 
-  const unique_user_name = [...new Set(workoutData.map((r) => r.name))];
+  // const unique_user_name = [...new Set(workoutData.map((r) => r.name))];
+  // const user
 
   const workoutMovementSummary = [];
 
-  unique_user_name.map((name) => {
+  // unique_user_name.map((memberName) => {
     
-    const user_all_day_data = workoutData.filter((wd) => wd.name == name);
+    const user_all_day_data = workoutData.filter((wd) => wd.name == memberName);
 
     const perMovementHistory = [];
     // { code: , history: [{}]}
@@ -54,12 +69,14 @@ const getRecom = async () => {
         history.push(obj);
         // console.log(history)
         if (isHistoryPresent) {
+          console.log(memberName);
+          console.log(obj);
           let index = perMovementHistory.findIndex((x) => x.code == mvmtCode);
           perMovementHistory[index].history.push(obj);
           
           //  console.log()
         } else {
-          //  console.log();
+          
           perMovementHistory.push({
             code: mvmtCode,
             history: history,
@@ -69,10 +86,10 @@ const getRecom = async () => {
     });
 
     workoutMovementSummary.push({
-      name: name,
+      name: memberName,
       movementHistory: perMovementHistory,
     });
-  });
+  // });
 
   return workoutMovementSummary;
 };
