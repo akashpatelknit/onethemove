@@ -14,7 +14,8 @@ router.get("/workout/average", async (req, res) => {
 router.get("/recommendation", async (req, res) => {
     
     const memberName = req.query.name
-    const intensity = await getIntensityRecommendation(memberName);
+    const title=req.query.day
+    const intensity = await getIntensityRecommendation(memberName,title);
     res.json(intensity);
 
 })

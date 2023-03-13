@@ -1,7 +1,6 @@
 {
   "name": "inside2",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "engines": {
     "node": "14.x"
@@ -19,5 +18,14 @@
     "mongodb": "^5.1.0",
     "mongoose": "^6.9.1",
     "morgan": "^1.10.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akashpatelknit/onethemove.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akashpatelknit/onethemove/issues"
+  },
+  "homepage": "https://github.com/akashpatelknit/onethemove#readme",
+  "description": ""
 }

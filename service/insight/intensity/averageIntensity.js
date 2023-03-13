@@ -9,7 +9,7 @@ const getAverageIntensity = async () => {
   const avgIntensity = [];
   unique_user_title.map((item) => {
     const user_per_day = u_data.filter((data) => data.title == item);
-    console.log(user_per_day)
+    // console.log(user_per_day)
 
     let total = 0;
     user_per_day.map(intensity => {
@@ -28,12 +28,9 @@ const getAverageIntensity = async () => {
     })
 
   })
-
   return avgIntensity;
 
 }
-
-
 module.exports = {
   getAverageIntensity
 }
