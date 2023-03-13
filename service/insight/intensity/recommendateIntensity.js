@@ -4,6 +4,7 @@ const { DB_COLLECTION } = require("../../../db/dbDetails");
 const MAX_INTENSITY = 150
 
 const getIntensityRecommendation = async (memberName, title, batchName) => {
+  console.log("Fetchhing Intensity recommendation", memberName, title);
   const intensityData = await getAll(DB_COLLECTION.INTENSITY);
   const memberData = await getAll(DB_COLLECTION.MEMBER);
   const workoutData = await getAll(DB_COLLECTION.WORKOUT);
@@ -25,35 +26,27 @@ const getIntensityRecommendation = async (memberName, title, batchName) => {
   const averageIntensity = Math.round(total / chunk.length);
 
 
-  // to find recomm for metcon-AMRAP
-  const batch = 'METCON'
+  
   const userProgram = workoutData.filter((Day) => Day.day === title)[0].program
+  const metconData = userProgram.filter(s => s.code == 'METCON')[0]
 
-  // const allCode = userProgram.map(item => {
-  //   if(item.code===batch) return item;
-  // })
-  // console.log(allCode[4].code)
-
-  const metconData = userProgram.reduce((option, item) => {
-    if (item.code === batch) { option.push(item); }
-    return option;
-  }, [])
   // console.log(metconData[0].name)
   let diplayText
-  const workFormat = metconData[0].content.format;
+  const workFormat = metconData.content.format;
   if (workFormat.name === 'AMRAP') {
     // ideal case for intensity
     console.log(workFormat.coachNotes[0].levels[0].content, "in", workFormat.displayName, "is", workFormat.coachNotes[0].levels[0].levelName)
 
-    var IdealRound = workFormat.coachNotes[0].levels[0].content.replace(/[^0-9]/g, '');
-    // console.log(IdealRound)
-    var reqRound = IdealRound
-    var reqPercent = reqRound * 100 / IdealRound
+    // this will come directly from DB
+    var idealRound = workFormat.coachNotes[0].levels[0].content[3]
+    console.log("IdealRound",idealRound)
+    var reqRound = idealRound
+    var reqPercent = 100
     while (averageIntensity < reqPercent) {
-      reqPercent = (--reqRound) * 100 / IdealRound
+      reqPercent = (--reqRound) * 100 / idealRound
     }
     reqRound++;
-    reqPercent = Math.round(reqRound * 100 / IdealRound)
+    reqPercent = Math.round(reqRound * 100 / idealRound)
     // console.log(reqRound,reqPercent)
     diplayText = `You have been working at ${averageIntensity}% intensity.Let's try going for ${reqPercent}%. Perform ${reqRound} rounds in ${workFormat.displayName}.`
   }
