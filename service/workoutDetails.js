@@ -3,8 +3,9 @@ const { getWorkoutAttendance } = require("./insight/consistency/insight_attendan
 
 
 
+
 const getWorkoutDetails = async (batchName, title, memberName, theme) => {
-    
+
 
     const assessmentRecommendation = await getAssessmentInsight(memberName); 
     const workoutAttendance = await getWorkoutAttendance(title, batchName); 
