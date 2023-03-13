@@ -4,7 +4,8 @@ const { DB_COLLECTION } = require("../../../db/dbDetails");
 const { getAttendanceData, getCollectionData } = require("../../axiosService");
 // const { ans}= require("./insight_attendance_unique_title");
 
-let getWorkoutAttendance = async (title) => { 
+
+ let getWorkoutAttendance = async (title) => { 
   const attendanceData =  await getAll(DB_COLLECTION.ATTENDANCE);
   
     const memberData = await getAll(DB_COLLECTION.MEMBER);
@@ -34,8 +35,8 @@ let getWorkoutAttendance = async (title) => {
 
     })
     return user_attendendant_data
-  
  }
+ 
 
 
 module.exports = {
